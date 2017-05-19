@@ -1,2 +1,8 @@
+# Python generated files
+__pycache__/
+
+# Virtual environment
 env/
+
+# Downloaded data
 *.csv
