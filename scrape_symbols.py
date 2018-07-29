@@ -31,6 +31,11 @@ def parse_args():
         required=True,
         help='Source of data. [nyse]')
 
+    ap.add_argument(
+        '--destination',
+        required=False,
+        help='Path of csv to store data into')
+
     return vars(ap.parse_args())
 
 if __name__ == '__main__':

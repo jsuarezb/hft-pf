@@ -4,32 +4,7 @@ High frequency trading project.
 
 ## Setup
 
-This setup works with **Ubuntu 16.04** or greater using **Python 3**.
-
-### Virtualenv
-
-It's advised to use `virtualenv` to create a virtual environment and install pip dependencies.
-
-To install `virtualenv` run:
-
-```bash
-sudo apt install virtualenv
-```
-
-Go to the root of the project and create the virtual environment:
-
-```bash
-cd hft-pf/
-virtualenv env
-```
-
-This should create a new folder called `env` inside the project. Inside this folder we will install all the dependencies using `pip`.
-
-To use the virtual environment, **before using `pip`**, activate it with:
-
-```bash
-source env/bin/activate
-```
+This setup works with **Ubuntu 16.04** or greater using **Python 3** and **Pipenv**.
 
 ### pip
 
@@ -41,33 +16,68 @@ To install it, run:
 sudo apt install python3-pip
 ```
 
-After installing `pip`, make sure that your virtual environment is activated and install all the project dependencies:
+After installing `pip`, install `pipenv`:
 
 ```bash
-pip install -f requirements.txt
+pip install --user pipenv
+```
+
+### Virtual Environment
+
+To install this project dependencies, run:
+
+```bash
+pipenv sync
 ```
 
 ## Running the program
 
-As it is right now, there are two main behaviors.
+There are two executables: `scrape_symbol_details.py` and `scrape_symbols.py`.
 
-1. Downloading Google Finance data.
-2. Downloading NYSE symbols list.
-
-Before running the program, you should comment the code depending on the behavior needed. Inside `hft-pf/main.py` there should be the `main()` method where there's the logic that controls that behavior.
-
-After commenting the appropiate `main()` line, run it with:
+Both scripts should be run within the Pipenv environment. Pipenv provides a simple command to do this:
 
 ```bash
-python main.py
+pipenv run python scrape_symbols.py ...
+pipenv run python scrape_symbol_details.py ...
 ```
 
-The NYSE symbols are written in a file called `symbols.csv`, with two columns: the symbol itself (e.g. AAPL) and the long name (e.g. Apple Inc.).
+### Symbols List
 
-To extract the symbols values only, and sort them alphabetically:
+To download a list of symbols available for trading in a specific stock exchange, you should use `scrape_symbols` script.
+
+```
+SYNOPSIS
+  scrape_symbols.py --source SOURCE [OPTION]
+
+DESCRIPTION
+  --source        specifies the data source, available params: [nyse]
+
+  --destination   path of the CSV file to be written with the downloaded data
+```
+
+
+#### Note
+
+As an extra step, to extract the symbols values only, and sort them alphabetically:
 
 ```bash
 cut -d',' -f1 symbols.csv | sort > sorted_symbols.csv
 ```
 
 This writes a list of sorted symbols inside a new file called `sorted_symbols.csv`.
+
+### Symbol Details
+
+To download the time series of prices of a specific symbol, `scrape_symbol_details` should be used.
+
+```
+SYNOPSIS
+  scrape_symbol_details.py -s SYMBOL [OPTION]
+
+DESCRIPTION
+  -s, --symbol    symbol name
+
+  --source        specifies the data source, available params: [google_finance]
+
+  --destination   path of the CSV file to be written with the downloaded data
+```
