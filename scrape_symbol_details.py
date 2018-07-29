@@ -3,10 +3,11 @@ import datetime
 import sys
 
 import scrapers.symbol_details
-from scrapers.symbol_details import google
+from scrapers.symbol_details import google, alphavantage
 
 AVAILABLE_SCRAPERS = {
-    scrapers.symbol_details.GOOGLE_FINANCE: google.Scraper
+    scrapers.symbol_details.GOOGLE_FINANCE: google.Scraper,
+    scrapers.symbol_details.ALPHA_VANTAGE: alphavantage.Scraper
 }
 
 
@@ -26,7 +27,7 @@ def main():
 
 def generate_default_path(symbol, source):
     date = datetime.datetime.now().strftime('%Y%m%d%H%M%S')
-    
+
     return '{symbol}-{source}-{date}.csv'.format(symbol=symbol,
                                                  source=source,
                                                  date=date)

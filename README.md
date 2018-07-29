@@ -77,7 +77,9 @@ SYNOPSIS
 DESCRIPTION
   -s, --symbol    symbol name
 
-  --source        specifies the data source, available params: [google_finance]
+  --source        specifies the data source, available params: [google_finance, alpha_vantage]
 
   --destination   path of the CSV file to be written with the downloaded data
 ```
+
+If you want to consume Alpha Vantage API, `ALPHA_VANTAGE_API_KEY` must be defined. An Alpha Vantage API key can be generated [here](https://www.alphavantage.co/support/#api-key).

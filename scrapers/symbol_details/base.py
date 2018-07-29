@@ -1,6 +1,4 @@
-import scrapers.base
-
-class Scraper(scrapers.base.Scraper):
+class Scraper:
 
     def scrape(url):
         """

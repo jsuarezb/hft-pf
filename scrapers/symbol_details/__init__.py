@@ -1,1 +1,2 @@
-GOOGLE_FINANCE='google_finance'
+GOOGLE_FINANCE = 'google_finance'
+ALPHA_VANTAGE = 'alpha_vantage'
