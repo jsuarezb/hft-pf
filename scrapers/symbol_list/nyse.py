@@ -1,16 +1,11 @@
-import argparse
-import collections
 import csv
-import datetime
-import re
+
 import requests
-import sys
 
-from functools import reduce
-
-Tick = collections.namedtuple('Tick', ['date', 'open', 'close', 'low', 'high', 'volume'])
-
-class NyseScrapper:
+class Scraper:
+    """
+    NYSE symbols scraper
+    """
 
     SYMBOLS_PER_PAGE = 10
 
@@ -25,11 +20,23 @@ class NyseScrapper:
     SYMBOL_TICKER = 'SYMBOL_TICKER'
     INSTRUMENT_NAME = 'INSTRUMENT_NAME'
 
-    def scrap(self):
-        symbols = [self.scrap_letter(letter) for letter in NyseScrapper.LETTERS]
+
+    def scrape(self):
+        symbols = [self.__scrap_letter(letter) for letter in Scraper.LETTERS]
         return [[k, v] for letter_dicts in symbols for k, v in letter_dicts.items()]
 
-    def scrap_letter(self, letter):
+
+    def generate_url(self, **kwargs):
+        return None
+
+
+    def write(self, data, path):
+        with open(path, 'w') as csvfile:
+            writer = csv.writer(csvfile)
+            writer.writerows(data)
+
+
+    def __scrap_letter(self, letter):
         print('For letter {0}'.format(letter))
         symbols = {}
         current_index = 0
@@ -39,7 +46,7 @@ class NyseScrapper:
                                           start=current_index)
             response = requests.get(uri)
             json = response.json()
-            symbols.update(self.parse_symbols(json))
+            symbols.update(self.__parse_symbols(json))
 
             result_navs = json.get('results_nav')
             has_next = self.to_int(result_navs.get('have_next'), 0)
@@ -50,7 +57,8 @@ class NyseScrapper:
 
         return symbols
 
-    def parse_symbols(self, json):
+
+    def __parse_symbols(self, json):
         symbols = {}
 
         for result in json.get('results', []):
@@ -65,45 +73,6 @@ class NyseScrapper:
 
         return symbols
 
+
     def to_int(self, x, default):
         return default if x is None or not x else int(x)
-
-
-def scrap_symbols():
-    scrapper = NyseScrapper()
-    data = scrapper.scrap()
-
-    with open('symbols.csv', 'w') as csvfile:
-        writer = csv.writer(csvfile)
-        writer.writerows(data)
-
-    print('Done.')
-
-
-def main(args):
-    ap = argparse.ArgumentParser()
-
-    ap.add_argument(
-        '-a',
-        '--activity',
-        required=True,
-        help='Activity to run')
-
-    ap.add_argument(
-        '-s',
-        '--symbol',
-        required=False,
-        help='Symbol to download data from')
-
-    args = vars(ap.parse_args())
-
-    if args['activity'] == activities.SYMBOLS:
-        pass
-    elif args['activity'] == activities.SYMBOL_DETAIL:
-        pass
-    else:
-        print('Unknown action')
-
-
-if __name__ == '__main__':
-    main()
